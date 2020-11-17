@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    {% load static %}
+    <script src="{% static 'jquery-3.3.1/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block css %}
+
+    {% endblock %}
+    {% block style %}
+
+    {% endblock %}
+</head>
+<body>
+<!--顶部导航条-->
+<div class="navbar-wrapper">
+    <div class="">
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">
+                        {% block innertitle %}
+
+                        {% endblock %}
+                    </a></li>
+                    <li class="active"><a href="/home/">首页</a></li>
+                    <li><a href="#">历史记录</a></li>
+                    <!--搜索框-->
+                    <li style="margin-left: 100px">
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="输入关键词">
+                            </div>
+                            <button type="submit" class="btn btn-default btn-warning">搜索</button>
+                        </form>
+                    </li>
+                    <!--右侧登录等按钮-->
+                    {% if request.user.is_authenticated %}
+                        <li>
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    style="margin-top: 10px;margin-left: 450px"
+                                    data-target="#exampleModal" data-whatever="@mdo">修改密码
+                            </button>
+
+                        </li>
+                        <li>
+                            <button id="logout" type="button" class="btn btn-info"
+                                    style="margin-top: 10px;margin-left: 10px">注销
+                            </button>
+                        </li>
+                        <li>
+                            <button id="backend" type="button" class="btn btn-success"
+                                    style="margin-top: 10px;margin-left: 10px">后台管理
+                            </button>
+                        </li>
+                    {% else %}
+                        <li>
+                            <button id="register" type="button" class="btn btn-success"
+                                    style="margin-top: 10px;margin-left: 450px">注册
+                            </button>
+                        </li>
+                        <li>
+                            <button id="login" type="button" class="btn btn-info"
+                                    style="margin-top: 10px;margin-left: 10px">登录
+                            </button>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">修改密码</h4>
+            </div>
+            <!--修改密码的模态框-->
+            <div class="modal-body">
+                <form id="form_pwd">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="old_pwd" class="control-label">旧密码:
+                        </label>
+                        <input type="password" id="old_pwd" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="new_pwd" class="control-label">新密码:</label>
+                        <input type="password" id="new_pwd" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="re_new_pwd" class="control-label">确认新密码:
+                        </label>
+                        <input type="password" id="re_new_pwd" class="form-control">
+                    </div>
+                </form>
+            </div>
+            <div class="text-center" style="height: 10px">
+                <span class="text-danger"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消修改
+                </button>
+                <button type="button" class="btn btn-primary" id="btn_pwd">提交修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block core %}
+
+{% endblock %}
+
+
+<script>
+    $("#register").click(function () {
+        window.open('/register/', "_self")
+    })
+    $("#login").click(function () {
+        window.open('/login/', "_self")
+    })
+    $("#backend").click(function () {
+        window.open('/backend/', "_self")
+    })
+    $("#logout").click(function () {
+        window.open('/logout/', "_self")
+    })
+
+    $('#btn_pwd').click(function () {
+        $(this).prop('disabled', true)
+        $.ajax({
+            url: '/change_pwd/',
+            method: 'post',
+            data: {
+                'old_pwd': $('#old_pwd').val(),
+                'new_pwd': $('#new_pwd').val(),
+                're_new_pwd': $('#re_new_pwd').val(),
+                'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()
+            },
+            success: function (data) {
+                $('#btn_pwd').prop('disabled', false)
+                if (data.code === 100) {
+                    $('.text-danger').text(data.message)
+                    setTimeout(function () {
+                        location.href = data.url
+                    }, 5000)
+                } else {
+                    $('.text-danger').text(data.message)
+                    $(':password').val('')
+                    setTimeout(function () {
+                        $('.text-danger').text('')
+                    }, 3000)
+                }
+
+            }
+        })
+    })
+</script>
+
+{% block js %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客园首页</title>
+    {% load static %}
+    <script src="{% static 'jquery-3.3.1/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<!--顶部导航条-->
+<div class="navbar-wrapper">
+    <div class="">
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">博客园首页</a></li>
+                    <li class="active"><a href="/home/">首页</a></li>
+                    <li><a href="#">历史记录</a></li>
+                    <!--搜索框-->
+                    <li style="margin-left: 100px">
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="输入关键词">
+                            </div>
+                            <button type="submit" class="btn btn-default btn-warning">搜索</button>
+                        </form>
+                    </li>
+                    <!--右侧登录等按钮-->
+                    {% if request.user.is_authenticated %}
+                        <li>
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    style="margin-top: 10px;margin-left: 450px"
+                                    data-target="#exampleModal" data-whatever="@mdo">修改密码
+                            </button>
+
+                        </li>
+                        <li>
+                            <button id="logout" type="button" class="btn btn-info"
+                                    style="margin-top: 10px;margin-left: 10px">注销
+                            </button>
+                        </li>
+                        <li>
+                            <button id="backend" type="button" class="btn btn-success"
+                                    style="margin-top: 10px;margin-left: 10px">后台管理
+                            </button>
+                        </li>
+                    {% else %}
+                        <li>
+                            <button id="register" type="button" class="btn btn-success"
+                                    style="margin-top: 10px;margin-left: 450px">注册
+                            </button>
+                        </li>
+                        <li>
+                            <button id="login" type="button" class="btn btn-info"
+                                    style="margin-top: 10px;margin-left: 10px">登录
+                            </button>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">修改密码</h4>
+            </div>
+            <!--修改密码的模态框-->
+            <div class="modal-body">
+                <form id="form_pwd">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="old_pwd" class="control-label">旧密码:
+                        </label>
+                        <input type="password" id="old_pwd" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="new_pwd" class="control-label">新密码:</label>
+                        <input type="password" id="new_pwd" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="re_new_pwd" class="control-label">确认新密码:
+                        </label>
+                        <input type="password" id="re_new_pwd" class="form-control">
+                    </div>
+                </form>
+            </div>
+            <div class="text-center" style="height: 10px">
+                <sapn class="text-danger"></sapn>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消修改
+                </button>
+                <button type="button" class="btn btn-primary" id="btn_pwd">提交修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2" id="blog_right">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">关注</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">我评</a>
+                    <hr>
+                    详情点击：<a href="">我赞</a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">精华</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">候选</a>
+                    <hr>
+                    详情点击：<a href="">订阅</a>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">广告招商</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">百度</a>
+                    <hr>
+                    详情点击：<a href="">腾讯</a>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">广告招商</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">百度</a>
+                    <hr>
+                    详情点击：<a href="">腾讯</a>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">广告招商</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">百度</a>
+                    <hr>
+                    详情点击：<a href="">腾讯</a>
+                </div>
+            </div>
+        </div>
+        <!--博客中部-->
+        <div class="col-md-7" id="blog_middle">
+            <!--顶部轮播图-->
+            <div class="lbt">
+                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <!-- 图片翻页 -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                    </ol>
+                    <!-- 轮播图片 -->
+                    <div class="carousel-inner" role="listbox">
+                        <div class="item active">
+                            <a href="{{ ll.0.url }}" class="a"><img
+                                    src="{{ ll.0.img_url }}"
+                                    alt="..." class="img"></a>
+                            <div class="carousel-caption" style="font-size: 25px">
+                                火热广告招商
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="{{ ll.1.url }}" class="a"><img
+                                    src="{{ ll.1.img_url }}"
+                                    alt="..." class="img"></a>
+                            <div class="carousel-caption" style="font-size: 25px">
+                                体验游戏人生
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="{{ ll.2.url }}" class="a"><img
+                                    src="{{ ll.2.img_url }}"
+                                    alt="..." class="img"></a>
+                            <div class="carousel-caption" style="font-size: 25px">
+                                点我有你好看
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 左右翻页 -->
+                    <a class="left carousel-control" href="#carousel-example-generic" role="button"
+                       data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">上一页</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" role="button"
+                       data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">下一页</span>
+                    </a>
+                </div>
+            </div>
+            <!--各个文章摘要-->
+            <hr>
+            <div class="article">
+                {% for article in page_queryset %}
+                    <div class="media">
+                        <h4 class="media-heading"><a
+                                href="/{{ article.blog.user.username }}/article_detail/{{ article.id }}.html">{{ article.name }}</a>
+                        </h4>
+                        <div class="media-left">
+                            <a href="/blogsite/{{ article.blog.user.username }}/">
+                                <img class="media-object" src="/media/{{ article.blog.user.head }}" alt="..."
+                                     width="60"
+                                     height="60">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            {{ article.description }}
+                        </div>
+                        <div class="article_bottom "><span><a
+                                href="/blogsite/{{ article.blog.user.username }}/">{{ article.blog.user.username }}</a></span>
+                            &nbsp;<span>{{ article.create_time|date:'Y-m-d H-i-s' }}</span>
+                            &nbsp;<span><i class="fa fa-thumbs-up fa-lg"></i>&nbsp;{{ article.up_num }}</span>
+                            <span class=""><i
+                                    class="fa fa-commenting-o fa-lg"></i>&nbsp;{{ article.commit_num }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="text-center">{{ page_obj.page_html|safe }}</div>
+            </div>
+        </div>
+        <!--博客右侧-->
+        <div class="col-md-3" id="blog_left">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">关注</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">我评</a>
+                    <hr>
+                    详情点击：<a href="">我赞</a>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">精华</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">候选</a>
+                    <hr>
+                    详情点击：<a href="">订阅</a>
+                </div>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">广告招商</h3>
+                </div>
+                <div class="panel-body">
+                    详情点击：<a href="">百度</a>
+                    <hr>
+                    详情点击：<a href="">腾讯</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $("#register").click(function () {
+        window.open('/register/', "_self")
+    })
+    $("#login").click(function () {
+        window.open('/login/', "_self")
+    })
+    $("#backend").click(function () {
+        window.open('/backend/', "_self")
+    })
+    $("#logout").click(function () {
+        window.open('/logout/', "_self")
+    })
+
+    $('#btn_pwd').click(function () {
+        $(this).prop('disabled', true)
+        $.ajax({
+            url: '/change_pwd/',
+            method: 'post',
+            data: {
+                'old_pwd': $('#old_pwd').val(),
+                'new_pwd': $('#new_pwd').val(),
+                're_new_pwd': $('#re_new_pwd').val(),
+                'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()
+            },
+            success: function (data) {
+                $('#btn_pwd').prop('disabled', false)
+                if (data.code === 100) {
+                    $('.text-danger').text(data.message)
+                    setTimeout(function () {
+                        location.href = data.url
+                    }, 5000)
+                } else {
+                    $('.text-danger').text(data.message)
+                    $(':password').val('')
+                    setTimeout(function () {
+                        $('.text-danger').text('')
+                    }, 3000)
+                }
+
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

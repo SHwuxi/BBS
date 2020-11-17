@@ -1,0 +1,50 @@
+<div class="left_content col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                       aria-expanded="true" aria-controls="collapseOne">
+                        操作
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <ul class="nav">
+                        <li><a href="/add_article/">新增文章</a></li>
+                        <li><a href="/update_head/">修改头像</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                       href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        分类
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                 aria-labelledby="headingTwo">
+                <div class="panel-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">随笔分类</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% for category in res_category %}
+                                <p>
+                                    <a href="/blogsite/{{ name }}/category/{{ category.2 }}.html">{{ category.0 }}&nbsp;({{ category.1 }})</a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

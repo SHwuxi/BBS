@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ user.username }}的博客
+{% endblock %}
+{% block style %}
+    <style>
+        body {
+            background-color: rgba(0,191,255,0.31);
+        }
+    </style>
+{% endblock %}
+{% block core %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                {% load blogsiteleft %}
+                {% left user.username %}
+            </div>
+            <div class="col-md-9 col-md-offset-1">
+                <!--文章头部-->
+                <div class="page-header">
+                    <h1>{{ user.username }}<small></small></h1>
+                </div>
+                <!--各个文章摘要-->
+                <div class="article">
+                    {% for article in page_queryset %}
+                        <div class="media">
+                            <h4 class="media-heading"><a
+                                    href="/{{ user.username }}/article_detail/{{ article.id }}.html/">{{ article.name }}</a>
+                            </h4>
+                            <div class="media-body">
+                                {{ article.description }}
+                            </div>
+                            <div class="article_bottom "><span><a
+                                    href="/blogsite/{{ article.blog.user.username }}/">{{ article.blog.user.username }}</a></span>
+                                &nbsp;<span>{{ article.create_time|date:'Y-m-d H-i-s' }}</span>
+                                &nbsp;<span><i class="fa fa-thumbs-up fa-lg"></i>&nbsp;{{ article.up_num }}</span>
+                                <span class=""><i
+                                        class="fa fa-commenting-o fa-lg"></i>&nbsp;{{ article.commit_num }}</span>
+                                <span><a href=""><i class="fa fa-eraser fa-lg"></i>&nbsp;编辑</a></span>
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                    <div class="text-center">{{ page_obj.page_html|safe }}</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

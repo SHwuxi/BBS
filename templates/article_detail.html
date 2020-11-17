@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ user.username }}的博客
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href='/static/css/mycss.css'>
+{% endblock %}
+{% block style %}
+    <style>
+        body {
+            background-color: rgba(0, 191, 255, 0.31);
+        }
+    </style>
+{% endblock %}
+{% block core %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                {% load blogsiteleft %}
+                {% left user.username %}
+            </div>
+            <div class="col-md-9 col-md-offset-1">
+                <!--文章头部-->
+                <div class="page-header">
+                    <h1>{{ article.name }}<small></small></h1>
+                </div>
+                <!--文章内容-->
+                <div>
+                    {{ article.content }}
+                </div>
+                <!--点赞点踩-->
+                <div>
+                    <div class="clearfix">
+                        <div id="div_digg">
+                            <div class="diggit action">
+                                <span class="diggnum" id="digg_count">{{ article.up_num }}</span>
+                            </div>
+                            <div class="buryit action">
+                                <span class="burynum" id="bury_count">{{ article.down_num }}</span>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="diggword" id="digg_tips" style="color: red;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--点赞点踩-->
+                <hr>
+                <!--评论列表-->
+                <div>
+                    <p>评论列表</p>
+                    <ul class="list-group">
+                        {% for commit in commit_list %}
+                            <li class="list-group-item">
+                                <div>
+                                    <span>#{{ forloop.counter }}楼</span>
+                                    <span>{{ commit.create_time|date:'Y-m-d H-i' }}</span>
+                                    <span><a
+                                            href="/blogsite/{{ commit.user.username }}/">{{ commit.user.username }}</a></span>
+                                    <span class="pull-right id_replay" username="{{ commit.user.username }}"
+                                          parent_id="{{ commit.id }}"><a>回复</a></span>
+                                </div>
+                                <div>
+                                    {% if commit.commit_self_id %}
+                                        <p>@{{ commit.commit_self.user.username }}</p>
+                                        <p>{{ commit.content }}</p>
+                                    {% else %}
+                                        <p>{{ commit.content }}</p>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!--评论区-->
+                <hr>
+                <div>
+                    {% if request.user.is_authenticated %}
+                        <p>评论区</p>
+                        <textarea name="" id="commit" cols="80" rows="5" style="resize: none"></textarea>
+                        <p>
+                            <button class="btn btn-success" type="button" id="btn">评论</button>
+                        </p>
+                    {% else %}
+                        <p>请先<a href="/login/">登录</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        let parent_id = ''
+        $('.action').click(function () {
+            let is_up = $(this).hasClass('diggit')
+            let span = $(this).children()
+            $.ajax({
+                url: '/diggit/',
+                method: 'post',
+                data: {
+                    'is_up': is_up,
+                    'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+                    'article_id': {{ article.id }}
+                },
+                success: function (data) {
+                    $('#digg_tips').html(data.msg)
+                    if (data.code === 100) {
+                        $(span).html(Number($(span).text()) + 1)
+                    }
+                }
+            })
+        })
+
+        $('#btn').click(function () {
+            let content = $('#commit').val()
+            if (parent_id) {
+                let i = content.indexOf('\n') + 1
+                content = content.slice(i)
+            }
+            $.ajax({
+                url: '/comment_content/',
+                method: 'post',
+                data: {
+                    commit: content,
+                    article_id: {{ article.id }},
+                    csrfmiddlewaretoken: $('[name="csrfmiddlewaretoken"]').val(),
+                    parent_id: parent_id
+                },
+                success: function (data) {
+                    if (data.code === 100) {
+                        let username = data.username
+                        let res_content = data.content
+                        let parent_name = data.parent_name
+                        let ss = ``
+                        if (parent_id) {
+                            ss = `<li class="list-group-item">
+                                <div>
+                                    <span><i class="fa fa-commenting-o fa-lg"></i> ${username}</span>
+                                </div>
+                                <div>
+                                <p>@${parent_name}</p>
+                                    ${res_content}
+                                </div>
+                            </li>`
+                        } else {
+                            ss = `<li class="list-group-item">
+                                <div>
+                                    <span><i class="fa fa-commenting-o fa-lg"></i> ${username}</span>
+                                </div>
+                                <div>
+                                    ${res_content}
+                                </div>
+                            </li>`
+                        }
+                        $('#commit').val('')
+                        $('.list-group').append(ss)
+                        parent_id = ''
+                    }
+                }
+            })
+        })
+        $('.id_replay').click(function () {
+            $('#commit').val('@' + $(this).attr('username') + '\n').focus()
+            parent_id = $(this).attr('parent_id')
+        })
+    </script>
+{% endblock %}

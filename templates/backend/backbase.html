@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ request.user.username }}的后台管理</title>
+    {% load static %}
+    <script src="{% static 'jquery-3.3.1/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div>
+    <div class="header">
+        <nav class="navbar navbar-default navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/backend/">后台管理</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/home/">首页 <span class="sr-only">(current)</span></a></li>
+
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            {% load blogsiteleft %}
+            {% backleft request %}
+            <div class="right_content col-md-9">
+                <div>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                                  data-toggle="tab">文章</a></li>
+                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
+                                                   data-toggle="tab">修改头像</a>
+                        </li>
+                        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
+                                                   data-toggle="tab">日志</a>
+                        </li>
+                        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
+                                                   data-toggle="tab">标签</a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="home">
+                            {% block content %}
+
+                            {% endblock %}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="profile">
+                            {% block head %}
+                            {% endblock %}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="messages">
+                            日志的内容
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="settings">
+                            标签的内容
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+{% block script %}
+
+{% endblock %}
+</html>

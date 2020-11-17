@@ -1,0 +1,33 @@
+<!--个人博客左侧-->
+<div class="text-center">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">我的标签</h3>
+        </div>
+        <div class="panel-body">
+            {% for tag in tag_list %}
+                <p><a href="/blogsite/{{ name }}/tag/{{ tag.2 }}.html">{{ tag.0 }}&nbsp;({{ tag.1 }})</a></p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">随笔分类</h3>
+        </div>
+        <div class="panel-body">
+            {% for category in category_list %}
+                <p><a href="/blogsite/{{ name }}/category/{{ category.2 }}.html">{{ category.0 }}&nbsp;({{ category.1 }})</a>
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">随笔档案</h3>
+        </div>
+        {% for month in month_list %}
+            <p><a href="/blogsite/{{ name }}/archive/{{ month.0|date:'Y/m' }}.html">
+                {{ month.0|date:'Y年m月' }}&nbsp;({{ month.1 }})</a></p>
+        {% endfor %}
+    </div>
+</div>

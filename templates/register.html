@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册界面</title>
+    {% load static %}
+    <script src="{% static 'jquery-3.3.1/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="text-center">注册界面</h2>
+        <div class="col-md-6 col-md-offset-3">
+            <form action="" enctype="multipart/form-data" id="form" novalidate>
+                {% csrf_token %}
+                {% for foo in form %}
+                    <div class="form-group">
+                        {{ foo.label }}
+                        {{ foo }}
+                        <span class="text-danger pull-right"></span>
+                    </div>
+                {% endfor %}
+                <div class="form-group">
+                    <label for="head">头像<img src="/static/img/default.png" width="80" height="80" alt="" id="head_img"></label>
+                    <input type="file" id="head" style="display: none">
+                </div>
+                <div class="text-center">
+                    <button class="btn-lg btn btn-success " type="button" id="btn">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('#head').change(function () {
+        let fileread = new FileReader()
+        fileread.readAsDataURL(this.files[0])
+        fileread.onload = function () {
+            console.log(fileread.result)
+            $('#head_img').attr('src', fileread.result)
+        }
+    })
+    $('#btn').click(function () {
+        let formdata = new FormData()
+        formdata.append('head', $('#head')[0].files[0])
+        let formlist = $('#form').serializeArray()
+        $.each(formlist, function (k, v) {
+            formdata.append(v.name, v.value)
+        })
+        $.ajax({
+            url: '',
+            method: 'post',
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.code === 100) {
+                    location.href = data.url
+                } else {
+                    $.each(data.error, function (k, v) {
+                        console.log(k, v)
+                        $('#id_' + k).next().text(v)
+                        setTimeout(function () {
+                            $('#id_' + k).next().text('')
+                        }, 3000)
+                    })
+                }
+            }
+        })
+    })
+    $('#id_username').blur(function () {
+        let name = $(this).val()
+        $.ajax({
+            url: '/check_user/?name=' + name,
+            method: 'get',
+            success: function (data) {
+                $(this).next().text(data.msg)
+                setTimeout(function () {
+                    $(this).next().text('')
+                }, 3000)
+            }
+        })
+    })
+</script>
+</body>
+</html>
